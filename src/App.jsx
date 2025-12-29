@@ -12,6 +12,7 @@ function App() {
   const selectedPlace = useRef();
   const [pickedPlaces, setPickedPlaces] = useState([]);
   const [availablePlaces, setAvailablePlaces] = useState([]);
+  const [showModal, setShowModal] = useState(false);
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
       const sortPlaces = sortPlacesByDistance(
@@ -24,12 +25,12 @@ function App() {
   }, []);
 
   function handleStartRemovePlace(id) {
-    modal.current.open();
+    setShowModal(true);
     selectedPlace.current = id;
   }
 
   function handleStopRemovePlace() {
-    modal.current.close();
+    setShowModal(false);
   }
 
   function handleSelectPlace(id) {
@@ -46,12 +47,12 @@ function App() {
     setPickedPlaces((prevPickedPlaces) =>
       prevPickedPlaces.filter((place) => place.id !== selectedPlace.current)
     );
-    modal.current.close();
+    setShowModal(false);
   }
 
   return (
     <>
-      <Modal ref={modal}>
+      <Modal ref={modal} open={showModal}>
         <DeleteConfirmation
           onCancel={handleStopRemovePlace}
           onConfirm={handleRemovePlace}
